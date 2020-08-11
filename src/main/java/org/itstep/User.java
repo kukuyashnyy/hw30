@@ -30,7 +30,11 @@ public class User implements Serializable {
     }
 
     public Task del(Task task) {
-        taskList.remove(task);
+        if(taskList.contains(task)){
+            taskList.remove(task);
+        } else {
+            System.out.println("Задача не найдена!");
+        }
         return task;
     }
 
