@@ -1,10 +1,7 @@
 package org.itstep;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 public class User implements Serializable {
     private String name;
@@ -25,8 +22,21 @@ public class User implements Serializable {
         this.taskList = new ArrayList<>();
     }
 
+    public Collection<Task> getTaskList() {
+        return taskList;
+    }
+
+    public void completeTask(Task task) {
+        if (this.taskList.contains(task)) {
+            System.out.println("Задача отмеченна как выполненна.");
+        } else {
+            System.out.println("Заданная задача не нейдена.");
+        }
+    }
+
     public void add(Task task) {
         taskList.add(task);
+        taskList.forEach(System.out::println);
     }
 
     public Task del(Task task) {

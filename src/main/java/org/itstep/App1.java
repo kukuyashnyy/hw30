@@ -7,8 +7,7 @@ import java.util.*;
 
 public class App1
 {
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) throws FileNotFoundException {
         final String fileName = "taskDB.dat";
 
         List<User> userList = null;
@@ -23,10 +22,6 @@ public class App1
         }
 
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println( "Hello World!" );
-        System.out.println(LocalDate.parse("2020-12-02").toEpochDay());
-        System.out.println(LocalDate.parse("2020-12-01").toEpochDay());
 
         boolean exit = true;
 
@@ -43,28 +38,47 @@ public class App1
                     break;
                 case 3:
                     //Отображение списка всех не выполненых задач (отсортированные по важности и дате)
+                    userList.get(userList.indexOf(user)).getTaskList().stream()
+                            .filter(p -> !p.isComplete())
+                            .sorted((p1, p2) -> p2.getPriority() - p1.getPriority())
+                            .forEach(System.out::println);
                     break;
                 case 4:
                     //Отображение списка всех выполненных задач (отсортированные по дате в обратном порядке)
+                    userList.get(userList.indexOf(user)).getTaskList().stream()
+                            .filter(Task::isComplete)
+                            .sorted((p1, p2) -> p1.getPriority() - p2.getPriority())
+                            .forEach(System.out::println);
                     break;
                 case 5:
                     //Добавление новой задачи
                     if (user == null) {
                         System.out.println("Пользователь не авторизирован!");
                     } else {
-                        user.add(new Task(reqInfo("Введите название задачи:"),
+                        userList.get(userList.indexOf(user)).add(new Task(reqInfo("Введите название задачи:"),
                                 Integer.parseInt(reqInfo("Введите приоритет от 1 до 5:"))));
+
                     }
                     break;
                 case 6:
                     //Отметка про выполнение задания
+                    if (user == null) {
+                        System.out.println("Пользователь не авторизирован!");
+                    } else {
+                        Task task = userList.get(userList.indexOf(user))
+                                .del(new Task(reqInfo("Введите название задачи:"), Integer.parseInt(reqInfo("Введите приоритет:"))));
+                        task.setComplete();
+                        userList.get(userList.indexOf(user))
+                                .add(task);
+                    }
                     break;
                 case 7:
                     //Удаление задачи
                     if (user == null) {
                         System.out.println("Пользователь не авторизирован!");
                     } else {
-                        user.del(new Task(reqInfo("Введите название задачи:")));
+                        userList.get(userList.indexOf(user))
+                                .del(new Task(reqInfo("Введите название задачи:"), Integer.parseInt(reqInfo("Введите приоритет:"))));
                     }
                     break;
                 case 8:
